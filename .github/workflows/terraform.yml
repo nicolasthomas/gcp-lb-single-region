@@ -37,7 +37,7 @@ jobs:
         cat > pipeline.auto.tfvars <<EOF
         project_id="${{ vars.GCP_PROJECT_ID }}"
         region="${{ vars.GCP_REGION }}"
-        zone="${{ vars.GCP_ZONE }}""
+        zone="${{ vars.GCP_ZONE }}"
         domain="${{ vars.GCP_DOMAIN }}" 
         EOF
 
