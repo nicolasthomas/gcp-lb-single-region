@@ -4,11 +4,27 @@ resource "google_compute_global_address" "ip-lb" {
   name = "${var.app-name}-ipv4"
 }
 
+
+# global ip for loadbalancer
+resource "google_compute_global_address" "ip-lb-v6" {
+  name       = "${var.app-name}-ipv6"
+  ip_version = "IPV6"
+}
+
+
 # used to forward traffic to the correct load balancer for HTTP load balancing 
 resource "google_compute_global_forwarding_rule" "http" {
   name       = "${var.app-name}-http"
   target     = google_compute_target_http_proxy.http.self_link
   ip_address = google_compute_global_address.ip-lb.address
+  port_range = "80"
+}
+
+# used to forward traffic to the correct load balancer for HTTP load balancing
+resource "google_compute_global_forwarding_rule" "http-v6" {
+  name       = "${var.app-name}-http-v6"
+  target     = google_compute_target_http_proxy.http.self_link
+  ip_address = google_compute_global_address.ip-lb-v6.address
   port_range = "80"
 }
 
@@ -70,7 +86,18 @@ resource "google_compute_global_forwarding_rule" "https" {
   port_range = "443"
 }
 
+resource "google_compute_global_forwarding_rule" "https-v6" {
+  name       = "${var.app-name}-https-v6"
+  target     = google_compute_target_https_proxy.https.id
+  ip_address = google_compute_global_address.ip-lb-v6.address
+  port_range = "443"
+}
+
 # show external ip address of load balancer
 output "Loadbalancer-IPv4-Address" {
   value = google_compute_global_address.ip-lb.address
+}
+# show external ip address of load balancer
+output "Loadbalancer-IPv6-Address" {
+  value = google_compute_global_address.ip-lb-v6.address
 }

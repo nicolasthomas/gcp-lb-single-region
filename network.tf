@@ -5,6 +5,7 @@ resource "google_compute_network" "vpc" {
   auto_create_subnetworks         = false
   mtu                             = 1460
   delete_default_routes_on_create = false
+  enable_ula_internal_ipv6        = true
 
   depends_on = [
     google_project_service.compute,
@@ -18,6 +19,8 @@ resource "google_compute_subnetwork" "private" {
   region                   = var.region
   network                  = google_compute_network.vpc.id
   private_ip_google_access = false
+  #stack_type               = "IPV4_IPV6"
+  #ipv6_access_type         = "INTERNAL"
 }
 
 
